@@ -40,7 +40,6 @@ for msg in inport:
     if msg.type in ['note_on','note_off']:
         # mido starts MIDI channels at 0
         if msg.channel == 1:
-
             if msg.note in note_mapping:
                 new_note = note_mapping[msg.note]
                 msg.note = new_note
