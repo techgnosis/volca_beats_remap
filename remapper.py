@@ -23,27 +23,25 @@ note_mapping = {
     54 : 39,
     55 : 75,
     56 : 67,
-    57 : 49    
+    57 : 49
 }
 
 
 mido.set_backend('mido.backends.rtmidi')
 
 inport = mido.open_input('RemapInput', virtual=True)
-print(inport)
 
-print(mido.get_output_names())
+outputs = mido.get_output_names()
+um_one = next(x for x in outputs if 'UM-ONE' in x)
 
-outport = mido.open_output('UM-ONE 24:0', virtual=False)
-print(outport)
+outport = mido.open_output(um_one, virtual=False)
 
 for msg in inport:
     if msg.type in ['note_on','note_off']:
+        # mido starts MIDI channels at 0
         if msg.channel == 1:
-            print('Recieved {} on channel {}'.format(msg.note, msg.channel))
+
             if msg.note in note_mapping:
-                print('Found note in note_mapping')
                 new_note = note_mapping[msg.note]
-                print('New note is {}'.format(new_note))
                 msg.note = new_note
-            outport.send(msg)
+                outport.send(msg)
